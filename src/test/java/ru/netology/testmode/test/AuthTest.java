@@ -4,8 +4,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+
+import static com.codeborne.selenide.Condition.exactText;
 import static com.codeborne.selenide.Selenide.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static ru.netology.testmode.data.DataGenerator.Registration.getRegisteredUser;
 import static ru.netology.testmode.data.DataGenerator.Registration.getUser;
 import static ru.netology.testmode.data.DataGenerator.getRandomLogin;
@@ -25,12 +26,7 @@ public class AuthTest {
         $x("//*[@data-test-id=\"login\"]//self::input").setValue(registeredUser.getLogin());
         $x("//*[@data-test-id=\"password\"]//self::input").setValue(registeredUser.getPassword());
         $x("//*[@data-test-id=\"action-login\"]").click();
-        sleep(1000);
-        String validText = $x("//*[@id=\"root\"]").getText();
-        assertEquals("Личный кабинет",validText.trim());
-        // TODO: добавить логику теста, в рамках которого будет выполнена попытка входа в личный кабинет с учётными
-        //  данными зарегистрированного активного пользователя, для заполнения полей формы используйте
-        //  пользователя registeredUser
+        $x("//*[@id=\"root\"]").shouldHave(exactText("Личный кабинет"));
     }
 
     @Test
@@ -40,12 +36,8 @@ public class AuthTest {
         $x("//*[@data-test-id=\"login\"]//self::input").setValue(notRegisteredUser.getLogin());
         $x("//*[@data-test-id=\"password\"]//self::input").setValue(notRegisteredUser.getPassword());
         $x("//*[@data-test-id=\"action-login\"]").click();
-        sleep(1000);
-        String validText = $x("//*[@data-test-id=\"error-notification\"]").getText();
-        assertEquals("Ошибка\n" +
-                "Ошибка! Неверно указан логин или пароль",validText.trim());
-        // TODO: добавить логику теста в рамках которого будет выполнена попытка входа в личный кабинет
-        //  незарегистрированного пользователя, для заполнения полей формы используйте пользователя notRegisteredUser
+        $x("//*[@data-test-id=\"error-notification\"]").shouldHave(exactText("Ошибка\n" +
+                "Ошибка! Неверно указан логин или пароль"));
     }
 
     @Test
@@ -55,12 +47,8 @@ public class AuthTest {
         $x("//*[@data-test-id=\"login\"]//self::input").setValue(blockedUser.getLogin());
         $x("//*[@data-test-id=\"password\"]//self::input").setValue(blockedUser.getPassword());
         $x("//*[@data-test-id=\"action-login\"]").click();
-        sleep(1000);
-        String validText = $x("//*[@data-test-id=\"error-notification\"]").getText();
-        assertEquals("Ошибка\n" +
-                "Ошибка! Пользователь заблокирован",validText.trim());
-        // TODO: добавить логику теста в рамках которого будет выполнена попытка входа в личный кабинет,
-        //  заблокированного пользователя, для заполнения полей формы используйте пользователя blockedUser
+        $x("//*[@data-test-id=\"error-notification\"]").shouldHave(exactText("Ошибка\n" +
+                "Ошибка! Пользователь заблокирован"));
     }
 
     @Test
@@ -71,13 +59,8 @@ public class AuthTest {
         $x("//*[@data-test-id=\"login\"]//self::input").setValue(wrongLogin);
         $x("//*[@data-test-id=\"password\"]//self::input").setValue(registeredUser.getPassword());
         $x("//*[@data-test-id=\"action-login\"]").click();
-        sleep(1000);
-        String validText = $x("//*[@data-test-id=\"error-notification\"]").getText();
-        assertEquals("Ошибка\n" +
-                "Ошибка! Неверно указан логин или пароль",validText.trim());
-        // TODO: добавить логику теста в рамках которого будет выполнена попытка входа в личный кабинет с неверным
-        //  логином, для заполнения поля формы "Логин" используйте переменную wrongLogin,
-        //  "Пароль" - пользователя registeredUser
+        $x("//*[@data-test-id=\"error-notification\"]").shouldHave(exactText("Ошибка\n" +
+                "Ошибка! Неверно указан логин или пароль"));
     }
 
     @Test
@@ -88,12 +71,7 @@ public class AuthTest {
         $x("//*[@data-test-id=\"login\"]//self::input").setValue(registeredUser.getLogin());
         $x("//*[@data-test-id=\"password\"]//self::input").setValue(wrongPassword);
         $x("//*[@data-test-id=\"action-login\"]").click();
-        sleep(1000);
-        String validText = $x("//*[@data-test-id=\"error-notification\"]").getText();
-        assertEquals("Ошибка\n" +
-                "Ошибка! Неверно указан логин или пароль",validText.trim());
-        // TODO: добавить логику теста в рамках которого будет выполнена попытка входа в личный кабинет с неверным
-        //  паролем, для заполнения поля формы "Логин" используйте пользователя registeredUser,
-        //  "Пароль" - переменную wrongPassword
+        $x("//*[@data-test-id=\"error-notification\"]").shouldHave(exactText("Ошибка\n" +
+                "Ошибка! Неверно указан логин или пароль"));
     }
 }
